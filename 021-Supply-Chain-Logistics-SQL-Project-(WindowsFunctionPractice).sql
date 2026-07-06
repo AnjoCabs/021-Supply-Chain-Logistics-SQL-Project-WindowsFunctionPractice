@@ -7,6 +7,7 @@
 USE supplychaindb;
 
 -- 1. Rank carriers by total shipment volume.
+
 SELECT 
 	carrier,
     SUM(unitQuantity) AS totalVolume,
@@ -15,6 +16,7 @@ FROM orderlist
 GROUP BY carrier;
 
 -- 2. Rank customers by total units ordered.
+
 SELECT 
 	customer,
     SUM(unitQuantity) AS totalQuantity,
@@ -23,6 +25,7 @@ FROM orderlist
 GROUP BY customer;
 
 -- 3. Rank products by total shipment quantity.
+
 SELECT 
 	productId,
     COUNT(orderId) AS totalOrderCount,
@@ -31,6 +34,7 @@ FROM orderlist
 GROUP BY productId;
 
 -- 4. Find the top 3 products shipped from each plant.
+
 WITH productShipments AS (
     SELECT
         plantCode,
@@ -59,6 +63,7 @@ WHERE productRank <= 3
 ORDER BY plantCode, productRank;
 
 -- 5. Find the highest-volume customer for each carrier.
+
 WITH rankedCustomers AS (
     SELECT
         carrier,
@@ -84,6 +89,7 @@ WHERE customerRank = 1
 ORDER BY carrier;
 
 -- 6. Calculate cumulative shipment quantity over time.
+
 SELECT
 	YEAR(orderDate) AS year_,
     MONTH(orderDate) AS month_,
@@ -94,6 +100,7 @@ GROUP BY year_, month_
 ORDER BY YEAR(orderDate), MONTH(orderDate);
 
 -- 7. Calculate cumulative shipment weight by carrier.
+
 SELECT 
 	YEAR(orderDate) AS year_,
     MONTH(orderDate) AS month_,
@@ -105,6 +112,7 @@ GROUP BY year_, month_, carrier
 ORDER BY carrier, year_, month_;
 
 -- 8. Find the first shipment made by each customer.
+
 WITH customerShipments AS (
     SELECT
         customer,
@@ -121,6 +129,7 @@ FROM customerShipments
 WHERE rn = 1;
 
 -- 9.  Calculate cumulative shipment volume by plant.
+
 SELECT
 	YEAR(orderDate) AS year_,
     MONTH(orderDate) AS month_,
@@ -132,6 +141,7 @@ GROUP BY plantCode, year_, month_
 ORDER BY plantCode, YEAR(orderDate), MONTH(orderDate);
 
 -- 10. Find the first shipment made by each customer.
+
 WITH rankedShipment AS (
     SELECT
         customer,
@@ -149,6 +159,7 @@ WHERE customerRank = 1
 ORDER BY customer;
 
 -- 11. Find the latest shipment made by each customer.
+
 WITH customerLatestOrder AS (
     SELECT
         customer,
@@ -166,6 +177,7 @@ GROUP BY customer
 ORDER BY customer;
 
 -- 12. Rank warehouses by daily capacity.
+
 SELECT
 	plantId,
     dailyCapacity,
@@ -174,6 +186,7 @@ FROM whcapacities
 GROUP BY plantId, dailyCapacity;
 
 -- 13. Divide customer into quartiles based on order volume.
+
 WITH customerOrderVolume AS (
 SELECT
 	customer,
@@ -197,6 +210,7 @@ GROUP BY customer
 ORDER BY totalUnitVolume DESC;
 
 -- 14. Find the latest destination port used by each carrier.
+
 WITH latestPort AS (
 	SELECT
 		orderId,
@@ -214,6 +228,7 @@ GROUP BY carrier
 ORDER BY carrier;
 
 -- 15. Divide products into 5 groups based on shipment quantity.
+
 SELECT
 	productId,
     SUM(unitQuantity) AS totalUnitQuantity,
