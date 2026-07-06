@@ -4,6 +4,7 @@
  and support strategic decision-making."
 */
 
+
 USE supplychaindb;
 
 -- 1. Rank carriers by total shipment volume.
